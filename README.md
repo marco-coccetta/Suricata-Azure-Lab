@@ -11,12 +11,12 @@ Implementazione pratica di **Suricata IDS** su VM Azure per:
 - Threat Hunting su log JSON (`eve.json`)
 - Comprendere "rumore di fondo" Azure
 
-##Architettura
-Azure Resource Group (RG-CyberLab)
-├── VM Ubuntu 22.04 LTS (Standard_B1s)
-│ ├── Suricata IDS (eth0 monitoring)
-│ └── jq (JSON log analysis)
-└── NSG (SSH solo mio IP)
+Azure (West Europe)
+├── RG: RG-CyberLab
+├── VM: Ubuntu 22.04 LTS (B1s, IP pubblico)
+│   ├── Suricata IDS (eth0 → eve.json)
+│   └── jq (JSON parsing)
+└── NSG: SSH solo mio IP
 
 
 
