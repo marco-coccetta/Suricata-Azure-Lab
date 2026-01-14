@@ -1,54 +1,69 @@
-# Suricata NIDS Lab - Azure Security Monitoring
+#Suricata NIDS Lab - Azure Security Monitoring
 
-![Suricata](https://suricata.io/)
-![Ubuntu](https://ubuntu.com/)
-![Azure](https://azure.microsoft.com/)
+[![Suricata](https://img.shields.io/badge/Suricata-7.0.3-orange?style=flat&logo=suricata)](https://suricata.io/)
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04%20LTS-E95420?style=flat&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
+[![Azure](https://img.shields.io/badge/Azure-Cloud-0078D4?style=flat&logo=microsoftazure&logoColor=white)](https://azure.microsoft.com/)
 
-## Obiettivo
-Configurazione Suricata IDS su Azure VM per Network Security Monitoring e Threat Hunting.
+##Obiettivo
+Configurazione pratica di **Suricata IDS (Intrusion Detection System)** su una Virtual Machine Azure per implementare Network Security Monitoring (NSM), analizzare traffico reale e simulare attività di Threat Hunting tramite log JSON.
 
-## Architettura
-Azure VM Ubuntu 22.04 LTS (Standard_B1s)
-└── Suricata 7.0.3 → eve.json → jq analysis
+##Architettura
+*   **Infrastructure**: Azure VM (Standard_B1s)
+*   **OS**: Ubuntu 22.04 LTS
+*   **IDS Engine**: Suricata 7.x (monitoring su interfaccia `eth0`)
+*   **Logging**: EVE JSON format (analizzato tramite `jq`)
 
+##Installazione & Setup
+Comandi principali utilizzati per il deployment:
 
-## Installazione
 ```bash
+# Aggiornamento sistema e installazione pacchetti
 sudo apt update && sudo apt install suricata jq -y
+
+# Verifica versione e build info
+suricata --build-info
+
+# Avvio motore IDS su interfaccia specifica
 sudo suricata -c /etc/suricata/suricata.yaml -i eth0
 
 
-## Traffico Catturato (Log Reali)
 
-| Evento | Source IP | Dest IP | Protocollo | Dettagli
-|-------- |----------- |--------- |------------|----------
-| HTTP Health Check | 168.63.129.16 | 10.0.0.4 | TCP/80 | `/HealthService` WALinuxAgent
-| Azure Status | 10.0.0.4 | 168.63.129.16 | TCP/32526 | `PUT /status`
-| DNS Resolution | 10.0.0.4 | 168.63.129.16 | UDP/53 | VM hostname query
+#  Analisi del Traffico (Log Reali)
+Esempio di traffico intercettato e analizzato dai log eve.json:
 
-# DNS Analysis
+| Evento            | Source IP     | Dest IP       | Protocollo | Dettagli                         |
+| ----------------- | ------------- | ------------- | ---------- | -------------------------------- |
+| HTTP Health Check | 168.63.129.16 | 10.0.0.4      | TCP/80     | /HealthService (WALinuxAgent)    |
+| Azure Status      | 10.0.0.4      | 168.63.129.16 | TCP/32526  | PUT /status (Host communication) |
+| DNS Resolution    | 10.0.0.4      | 168.63.129.16 | UDP/53     | Internal hostname query          |
+
+
+# Comandi di Threat Hunting (JQ)
+Esempi di query utilizzate per estrarre intelligence dai log grezzi:
+
+# Filtrare solo traffico DNS
 sudo jq 'select(.event_type=="dns")' /var/log/suricata/eve.json
 
-# HTTP Traffic
+# Filtrare traffico HTTP
 sudo jq 'select(.event_type=="http")' /var/log/suricata/eve.json
 
-# IP Connections Count
+# Statistiche: Top Talkers (Conteggio connessioni per IP)
 sudo jq -r '.src_ip // .dest_ip' /var/log/suricata/eve.json | sort | uniq -c | sort -nr
 
-#Risultati
+#Risultati Ottenuti
+5970+ pacchetti analizzati correttamente.
 
-5970 pacchetti analizzati
+Identificato traffico di servizio Azure Guest Agent (non malevolo, ma rumoroso).
 
-Azure Guest Agent (168.63.129.16) identificato
+324 transazioni HTTP e 28 query DNS tracciate.
 
-324 HTTP transactions, 28 DNS queries
+#Competenze Acquisite
+Cloud Security: Deployment e hardening base di Azure VM.
 
-#Competenze
+Network Forensics: Analisi pacchetti e flussi di rete.
 
-Azure VM deployment & networking
+Log Analysis: Parsing di log JSON complessi con strumenti CLI (jq).
 
-Suricata IDS configuration
+IDS Tuning: Comprensione del "rumore" di fondo in ambiente cloud.
 
-JSON log analysis (Eve format)
 
-Threat hunting con jq
