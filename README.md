@@ -61,7 +61,7 @@ tail /var/log/suricata/eve.json | jq 'select(.proto=="ICMP")'
 tail -200 /var/log/suricata/eve.json | jq -r '.src_ip // .dest_ip' | sort | uniq -c | sort -nr
 
 
-RISULTATI TIPICI (dal mio Lab)
+# RISULTATI TIPICI (dal mio Lab)
 Top IP Osservati
   
   324 168.63.129.16  # Azure Guest Agent (normale)
@@ -69,7 +69,7 @@ Top IP Osservati
     5 10.0.0.4       # La VM stessa
 
 
-Esempio Log ICMP (Ping Reale)
+# Esempio Log ICMP (Ping Reale)
 
 text
 {
@@ -80,7 +80,7 @@ text
   "dest_ip": "8.8.8.8"
 }
 
-Risultati
+# Risultati
 
     5970+ pacchetti processati
 
@@ -90,7 +90,7 @@ Risultati
 
     JQ queries pronte per SOC 
 
-Hardening Applicato
+# Hardening Applicato
 
     NSG: SSH limitato al mio IP
 
@@ -98,7 +98,7 @@ Hardening Applicato
 
     Cleanup: Delete Resource Group
 
-Skills Demonstrate
+# Skills Demonstrate
 
 Junior SOC Analyst:
 
