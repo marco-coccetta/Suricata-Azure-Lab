@@ -106,6 +106,5 @@ tail -200 /var/log/suricata/eve.json | jq -r '.src_ip // .dest_ip' | sort | uniq
 - Log parsing (JSON con jq)
 - Analisi protocolli di rete (ICMP, DNS, HTTP)
 - Documentazione tecnica e riproducibilità del lab
-```
 
 
