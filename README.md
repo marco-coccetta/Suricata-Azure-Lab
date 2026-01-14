@@ -20,7 +20,7 @@ Azure (West Europe)
 
 
 
-## Guida Riproducibile (da Zero)
+## Guida Riproducibile
 
 1) Azure VM Deployment
 
@@ -52,11 +52,20 @@ tail /var/log/suricata/eve.json | jq 'select(.event_type=="http")'
 # DNS
 tail /var/log/suricata/eve.json | jq 'select(.event_type=="dns") | .dns.rrname'
 
-# ICMP (nuovo!)
+# ICMP 
 tail /var/log/suricata/eve.json | jq 'select(.proto=="ICMP")'
 
 # Top IP
 tail -200 /var/log/suricata/eve.json | jq -r '.src_ip // .dest_ip' | sort | uniq -c | sort -nr
+
+
+RISULTATI TIPICI (dal mio Lab)
+Top IP Osservati
+  
+  324 168.63.129.16  # Azure Guest Agent (normale)
+   28 8.8.8.8        # Google DNS
+    5 10.0.0.4       # La VM stessa
+
 
 Esempio Log ICMP (Ping Reale)
 
