@@ -40,7 +40,9 @@ sudo systemctl enable --now suricata
 4) Traffic Generation
 
 curl -I http://testmyids.com      # HTTP
+
 dig @8.8.8.8 google.com          # DNS  
+
 ping -c 5 8.8.8.8                # ICMP
 
 5) Log Analysis (jq)
