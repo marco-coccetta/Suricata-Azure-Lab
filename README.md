@@ -92,14 +92,10 @@ tail -200 /var/log/suricata/eve.json | jq -r '.src_ip // .dest_ip' | sort | uniq
 - ICMP, HTTP e DNS catturati correttamente
 - Query jq pronte per uso in contesto SOC
 
-## Hardening applicato
-- NSG: SSH limitato al mio IP
-- Costi: circa €0,01/ora (B1s)
-- Cleanup: eliminazione del Resource Group a fine test
+
 
 ## Skills dimostrate
 
-**Ruolo target: Junior SOC Analyst**
 
 - Azure VM provisioning e configurazione NSG
 - Deploy e gestione di Suricata IDS
